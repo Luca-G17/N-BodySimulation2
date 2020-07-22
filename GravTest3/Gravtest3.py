@@ -5,11 +5,12 @@ import random
 pygame.init()
 clock = pygame.time.Clock()
 
-WIDTH = 1020
-HEIGHT = 600
-BODY_COUNT = 150
+WIDTH = 1000
+HEIGHT = 1000
+BODY_COUNT = 100
+ENERGY_LOSS = 0.98
 
-win = pygame.display.set_mode((WIDTH, HEIGHT))
+win = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 colours = [[0, 0, 0], [0, 255, 0], [0, 0, 128], [255, 128, 0], [0, 153, 0]]
 # white, red, green, cyan, magenta, orange, dark green
 WHITE = [255, 255, 255]
@@ -20,7 +21,7 @@ win.fill(WHITE)
 
 MaxFps = 90
 
-G = 6.7 * (10 ** -1)
+G = 6.7 * (10 ** -2)
 
 
 class COMCircle(object):
@@ -96,8 +97,8 @@ def impact(body1, body2, bodies):
 
 def impact_calc(body1, body2):
     if not body1.reversed:
-        if math.hypot(body1.x_vel - body2.x_vel, body1.y_vel - body2.y_vel) > 0.01:
-            energy_lost = 0.98
+        if math.hypot(body1.x_vel - body2.x_vel, body1.y_vel - body2.y_vel) > 0.05:
+            energy_lost = ENERGY_LOSS
         else:
             energy_lost = 1
         tmp_x_vel = body1.x_vel
@@ -118,7 +119,7 @@ def gravity_calc(major_body, minor_body):
         g = 0
         ratio_total = 1
     else:
-        g = (G * major_body.mass) / hypotenuse ** 2
+        g = (G * major_body.mass * minor_body.mass) / hypotenuse ** 2
         ratio_total = (abs(major_body.x - minor_body.x)) + (abs(major_body.y - minor_body.y))
     if hypotenuse > major_body.radius * 2:
         minor_body.x_vel += g * ((major_body.x - minor_body.x) / ratio_total)
@@ -156,7 +157,7 @@ def mainloop():
     zoom = 1
     com_circle = COMCircle(WIDTH / 2, HEIGHT / 2, 5, [255, 0, 0])
     for i in range(0, BODY_COUNT - 1):
-        bodies = spawn_body(random.randint(0, WIDTH), random.randint(0, HEIGHT),
+        bodies = spawn_body(random.randint(200, WIDTH), random.randint(100, HEIGHT),
                             15, (169, 169, 169), bodies, random.uniform(-0.1, 0.1), random.uniform(-0.1, 0.1))
     while run:
         clock.tick(MaxFps)
