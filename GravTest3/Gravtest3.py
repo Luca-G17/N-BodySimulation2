@@ -8,7 +8,7 @@ clock = pygame.time.Clock()
 WIDTH = 1000
 HEIGHT = 1000
 BODY_COUNT = 100
-ENERGY_LOSS = 0.98
+ENERGY_LOSS = 0.95
 
 win = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 colours = [[0, 0, 0], [0, 255, 0], [0, 0, 128], [255, 128, 0], [0, 153, 0]]
@@ -97,22 +97,35 @@ def impact(body1, body2, bodies):
 
 def impact_calc(body1, body2):
     if not body1.reversed:
-        if math.hypot(body1.x_vel - body2.x_vel, body1.y_vel - body2.y_vel) > 0.05:
-            energy_lost = ENERGY_LOSS
-        else:
-            energy_lost = 1
         tmp_x_vel = body1.x_vel
         tmp_y_vel = body1.y_vel
-        body1.x_vel = body2.x_vel * energy_lost
-        body1.y_vel = body2.y_vel * energy_lost
-        body2.x_vel = tmp_x_vel * energy_lost
-        body2.y_vel = tmp_y_vel * energy_lost
+        body1.x_vel = body2.x_vel
+        body1.y_vel = body2.y_vel
+        body2.x_vel = tmp_x_vel
+        body2.y_vel = tmp_y_vel
+        rel_x_vel = abs(body1.x_vel - body2.x_vel) - (ENERGY_LOSS * abs(body1.x_vel - body2.x_vel))
+        rel_y_vel = abs(body1.y_vel - body2.y_vel) - (ENERGY_LOSS * abs(body1.y_vel - body2.y_vel))
+        energy_calc(body1, rel_x_vel, rel_y_vel)
+        energy_calc(body2, rel_x_vel, rel_y_vel)
         body1.reversed = True
     else:
         if math.hypot(abs(body1.x - body2.x), abs(body1.y - body2.y)) > body1.radius:
             body1.reversed = False
 
 
+def energy_calc(body, rel_x, rel_y):
+    if body.x_vel > 0:
+        sign_offset = -1
+    else:
+        sign_offset = 1
+    body.x_vel += sign_offset * rel_x
+    if body.y_vel > 0:
+        sign_offset = -1
+    else:
+        sign_offset = 1
+    body.y_vel += sign_offset * rel_y
+    
+    
 def gravity_calc(major_body, minor_body):
     hypotenuse = math.hypot(abs(major_body.x - minor_body.x), abs(major_body.y - minor_body.y))
     if hypotenuse == 0:
