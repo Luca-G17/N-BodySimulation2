@@ -5,12 +5,13 @@ import random
 pygame.init()
 clock = pygame.time.Clock()
 
-WIDTH = 1000
-HEIGHT = 1000
+WIDTH = 1020
+HEIGHT = 800
 BODY_COUNT = 100
 ENERGY_LOSS = 0.95
 
-win = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+win = pygame.display.set_mode((WIDTH, HEIGHT))
+#win = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 colours = [[0, 0, 0], [0, 255, 0], [0, 0, 128], [255, 128, 0], [0, 153, 0]]
 # white, red, green, cyan, magenta, orange, dark green
 WHITE = [255, 255, 255]
