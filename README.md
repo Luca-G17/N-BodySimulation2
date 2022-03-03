@@ -1,3 +1,2 @@
-# GravityTesting
-- Requires pygame
-- Can change the resolution x, y constant at the top of the program
+# N-BodySimulation2
+Attempts to simulate the gravitational forces between n-bodys that can collide with eachother, all bodies have mass and feel gravity from all other bodies. Once the bodies clump together into small groups the collision detection causes the bodies to move inside eachother which breaks the gravity simulation. I need to fix this by adding static collisionss as well as dynamic collisions
